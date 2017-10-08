@@ -14,7 +14,7 @@
 <div id="lyrics"></div>
 
 <script>
-	function testMe(settime){
+	function updateLyrics(settime){
 		if (settime < 9.58) {
 			elem.innerHTML = "Lyrics";
 		}
@@ -131,7 +131,7 @@
 	timing = v.currentTime;
 	elem = document.getElementById("lyrics");
 	elem.innerHTML = "Lyrics";
-	v.addEventListener("timeupdate", function(){timing = v.currentTime; testMe(timing)}, false);
+	v.addEventListener("timeupdate", function(){timing = v.currentTime; updateLyrics(timing)}, false);
 
 </script>
 </body>
