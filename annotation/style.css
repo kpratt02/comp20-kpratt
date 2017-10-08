@@ -1,0 +1,13 @@
+body{
+	text-align:center;
+}
+
+h1{
+	font-style: italic;
+	font-family:times;
+}
+
+#lyrics {
+	text-align:center;
+	font-family:times;
+}

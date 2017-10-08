@@ -14,7 +14,125 @@
 <div id="lyrics"></div>
 
 <script>
-  // Complete this section and create a CSS file named style.css
+	function testMe(settime){
+		if (settime < 9.58) {
+			elem.innerHTML = "Lyrics";
+		}
+		if (settime > 9.58) {
+			elem.innerHTML = "Children have You ever met the Bogeyman before";
+		}
+		if (settime > 14){
+			elem.innerHTML = "No, of course You haven't for You're much too good, I'm sure";
+		}
+		if (settime > 18){
+			elem.innerHTML = "Don't You be afraid of him if he should visit You,";
+		}
+		if (settime > 21){
+			elem.innerHTML = "He's a great big coward, so I'll tell You what to do";
+		}
+		if (settime > 25){
+			elem.innerHTML = "Hush, hush, hush, here comes the Bogeyman,";
+		}
+		if (settime > 29){
+			elem.innerHTML = "Don't let him come too close to You, he'll catch you if he can.";
+		}
+		if (settime >33){
+			elem.innerHTML = "Just pretend that you're a crocodile";
+		}
+		if (settime > 37){
+			elem.innerHTML = "And you will find that Bogeyman will run away a mile.";
+		}
+		if (settime > 41){
+			elem.innerHTML = "Say Shoo shoo and stick him with a pin";
+		}
+		if (settime > 45){
+			elem.innerHTML = "Bogeyman will very nearly jump out of his skin";
+		}
+		if (settime > 49){
+			elem.innerHTML = "Say buzz buzz just like the wasps that sting";
+		}
+		if (settime > 53){
+			elem.innerHTML = "Bogeyman will think you are an elephant with wings";
+		}
+		if (settime > 57){
+			elem.innerHTML = "Hush, hush, hush, here comes the Bogeyman";
+		}
+		if (settime > 64){
+			elem.innerHTML = "Tell him you've got soldiers in your bed";
+		}
+		if (settime > 68){
+			elem.innerHTML = "For he will never guess that they are only made of lead";
+		}
+		if (settime > 72){
+			elem.innerHTML = "***Instrumental***";
+		}
+		if (settime > 80){
+			elem.innerHTML = "Say Hush hush, he'll think that you're asleep";
+		}
+		if (settime > 84){
+			elem.innerHTML = "If you make a lovely snore away he'll softly creep";
+		}
+		if (settime > 89){
+			elem.innerHTML = "Sing this tune you children one and all";
+		}
+		if (settime > 92){
+			elem.innerHTML = "Bogeyman will run away, he'll think it's Henry Hall!";
+		}
+		if (settime > 96){
+			elem.innerHTML = "When the shadows of the evening creep across the sky";
+		}
+		if (settime > 100){
+			elem.innerHTML = "And your Mummy comes upstairs to sing a lullaby";
+		}
+		if (settime > 103){
+			elem.innerHTML = "Tell her that the bogeyman no longer frightens you";
+		}
+		if (settime > 107){
+			elem.innerHTML = "Uncle Henry's very kindly told you what to do";
+		}
+		if (settime > 111){
+			elem.innerHTML = "Hush, hush, hush, here comes the Bogeyman";
+		}
+		if (settime > 115){
+			elem.innerHTML = "Don't let him come too close to you, He'll catch you if he can.";
+		}
+		if (settime > 119){
+			elem.innerHTML = "Just pretend your teddy bear's a dog";
+		}
+		if (settime > 123){
+			elem.innerHTML = "Then shout out, 'Fetch him, Teddy!' and he'll hop off like a frog.";
+		}
+		if (settime > 127){
+			elem.innerHTML = "***Instrumental***";
+		}
+		if (settime > 134){
+			elem.innerHTML = "Say Meoow, pretend that you're a cat";
+		}
+		if (settime > 138){
+			elem.innerHTML = "He'll think you may scratch him that make him fall down flat";
+		}
+		if (settime > 142){
+			elem.innerHTML = "Just pretend he isn't really there";
+		}
+		if (settime > 146){
+			elem.innerHTML = "You will find that Bogey man will vanish in thin air";
+		}
+		if (settime > 158){
+			elem.innerHTML = "Here's one way to catch him without fail";
+		}
+		if (settime > 162){
+			elem.innerHTML = "Just keep a little salt with you";
+		}
+		if (settime > 164){
+			elem.innerHTML = "and put it on his tail";
+		}
+	}
+	var v = document.getElementsByTagName("video")[0];
+	timing = v.currentTime;
+	elem = document.getElementById("lyrics");
+	elem.innerHTML = "Lyrics";
+	v.addEventListener("timeupdate", function(){timing = v.currentTime; testMe(timing)}, false);
+
 </script>
 </body>
-</html>
+</html>	
