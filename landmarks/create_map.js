@@ -65,19 +65,101 @@ function runLater()
     if (http.readyState == 4 && http.status == 200) {
     	var parsed = JSON.parse(http.responseText);
     	addMarkers(parsed);
-    	}
+    	
     }
 }
-function addMarkers(parsedText)
-{
-    for (i = 0; i < parsedText.landmarks.length; i++){
-    	var LatLng = {lat: parsedText.landmarks[i].geometry.coordinates[0],
-    		lng: parsedText.landmarks[i].geometry.coordinates[1]};
-    		newMarker = new google.maps.Marker({
-        	position: LatLng,
-        	map: map,
-        	title: "hello world!",
-  	});
-  	newMarker.setMap(map);
 }
+function addMarkers(parsed){
+	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+	me = [myLng, myLat];
+	var smallDistance = 300;
+	var closeLandmark = "";
+	for (i = 0; i < parsed.landmarks.length; i++) {
+			var latitude = parsed.landmarks[i].geometry.coordinates[1];
+			var longitude = parsed.landmarks[i].geometry.coordinates[0];
+			var LatLng = {lat: latitude, lng: longitude};
+			var distanceAway = [longitude, latitude];
+    		LocationName = parsed.landmarks[i].properties.Location_Name;
+			var infoContent = '<div id="content">' +
+							'<div id="siteNotice">' + '</div>' +
+							'<h1 id="firstHeading" class="firstHeading">'
+							+LocationName + '</h1>'
+			infoContent += "Distance from Me: ";
+			var distance = haversineDistance(me, distanceAway, true);
+			if (distance < smallDistance){
+				smallDistance = distance;
+				closeLandmark = LocationName;
+			}
+			infoContent += '<div id="bodyContent">' + distance +
+							'</div></div>';
+			var newInfoWindow = new google.maps.InfoWindow ({
+				content:infoContent
+			});
+    		var newMarker = new google.maps.Marker({
+        		position: LatLng,
+        		map: map,
+        		title: parsed.landmarks[i].properties.Location_Name,
+        		infowindow: newInfoWindow
+  			});
+			google.maps.event.addListener(newMarker, 'click', function() {
+				this.infowindow.open(map, this);
+			});
+  			newMarker.setMap(map);
+   	}
+   	for (i = 0; i < parsed.people.length; i++) {
+   			var latitude = parsed.people[i].lat;
+			var longitude = parsed.people[i].lng;
+			var LatLng = {lat: latitude, lng: longitude};
+			var distanceAway = [longitude, latitude];
+   			var infoContent ='<div id="content">' +
+							'<div id="siteNotice">' + '</div>' +
+							'<h1 id="firstHeading" class="firstHeading">'+ 
+							parsed.people[i].login + '</h1>';
+			infoContent += "Distance from Me: ";
+			var distance = haversineDistance(me, distanceAway, true);
+			infoContent += '<div id="bodyContent">' + distance +
+							'</div></div>';
+			var newInfoWindow = new google.maps.InfoWindow ({
+				content:infoContent,
+			});
+    		var newMarker = new google.maps.Marker({
+        		position: LatLng,
+        		map: map,
+        		title: parsed.people[i].login,
+        		infowindow: newInfoWindow,
+        		icon: iconBase + 'parking_lot_maps.png'
+  			});
+			google.maps.event.addListener(newMarker, 'click', function() {
+				this.infowindow.open(map, this);
+			});
+  			newMarker.setMap(map);
+   	}
+   	console.log(closeLandmark, smallDistance);
+}
+function haversineDistance(coords1, coords2, isMiles) {
+  function toRad(x) {
+    return x * Math.PI / 180;
+  }
+
+  var lon1 = coords1[0];
+  var lat1 = coords1[1];
+
+  var lon2 = coords2[0];
+  var lat2 = coords2[1];
+
+  var R = 6371; // km
+
+  var x1 = lat2 - lat1;
+  var dLat = toRad(x1);
+  var x2 = lon2 - lon1;
+  var dLon = toRad(x2)
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c;
+
+  if(isMiles) d /= 1.60934;
+
+  return d;
 }
