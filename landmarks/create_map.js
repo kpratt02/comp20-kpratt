@@ -22,7 +22,8 @@ function getMyLocation() {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			myLat = position.coords.latitude;
 			myLng = position.coords.longitude;
-			runLater();
+			me = [myLng, myLat];
+			executeRequest();
 		});
 	}
 	else {
@@ -30,7 +31,7 @@ function getMyLocation() {
 	}
 }
 
-function runLater()
+function executeRequest()
 {
   var http = new XMLHttpRequest();
   http.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation");
@@ -44,32 +45,26 @@ function runLater()
     if (http.readyState == 4 && http.status == 200) {
     	var parsed = JSON.parse(http.responseText);
     	addMarkers(parsed);	
-    }
-}
+    	}
+	}
 }
 function addMarkers(parsed){
 	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-	me = [myLng, myLat];
 	var toAdd = [1, "",0,0];
 	for (i = 0; i < parsed.landmarks.length; i++) {
-			var latitude = parsed.landmarks[i].geometry.coordinates[1];
-			var longitude = parsed.landmarks[i].geometry.coordinates[0];
-			var LatLng = {lat: latitude, lng: longitude};
-			var distanceAway = [longitude, latitude];
-    		LocationName = parsed.landmarks[i].properties.Location_Name;
-			var infoContent = '<div id="content">' +
-							'<div id="siteNotice">' + '</div>' +
-							'<h1 id="firstHeading" class="firstHeading">'
-							+LocationName + '</h1>'
+			var LatLng = {lat: parsed.landmarks[i].geometry.coordinates[1], lng: parsed.landmarks[i].geometry.coordinates[0]};
+			var distanceAway = [parsed.landmarks[i].geometry.coordinates[0], parsed.landmarks[i].geometry.coordinates[1]];
+			var infoContent = '<div id="content"><div id="siteNotice"></div><h1 id="firstHeading" class="firstHeading">'
+							+ parsed.landmarks[i].properties.Location_Name + '</h1>'
 			var distance = haversineDistance(me, distanceAway, true);
 			if (distance > 1){
 				continue;
 			}
 			if (distance < toAdd[0]){
 				toAdd[0] = distance;
-				toAdd[1] = LocationName;
-				toAdd[2] = latitude;
-				toAdd[3] = longitude;
+				toAdd[1] = parsed.landmarks[i].properties.Location_Name;
+				toAdd[2] = parsed.landmarks[i].geometry.coordinates[1];;
+				toAdd[3] = parsed.landmarks[i].geometry.coordinates[0];
 			}
 			infoContent += '<div id="bodyContent">' + parsed.landmarks[i].properties.Details;
 			infoContent += "Distance from Me: ";
@@ -89,18 +84,13 @@ function addMarkers(parsed){
   			newMarker.setMap(map);
    	}
    	for (i = 0; i < parsed.people.length; i++) {
-   			var latitude = parsed.people[i].lat;
-			var longitude = parsed.people[i].lng;
-			var LatLng = {lat: latitude, lng: longitude};
-			var distanceAway = [longitude, latitude];
-   			var infoContent ='<div id="content">' +
-							'<div id="siteNotice">' + '</div>' +
-							'<h1 id="firstHeading" class="firstHeading">'+ 
+			var LatLng = {lat: parsed.people[i].lat, lng: parsed.people[i].lng};
+			var distanceAway = [parsed.people[i].lng, parsed.people[i].lat];
+   			var infoContent ='<div id="content"><div id="siteNotice"></div><h1 id="firstHeading" class="firstHeading">'+ 
 							parsed.people[i].login + '</h1>';
 			infoContent += "Distance from Me: ";
 			var distance = haversineDistance(me, distanceAway, true);
-			infoContent += '<div id="bodyContent">' + distance +
-							'</div></div>';
+			infoContent += '<div id="bodyContent">' + distance +'</div></div>';
 			var newInfoWindow = new google.maps.InfoWindow ({
 				content:infoContent,
 			});
@@ -116,14 +106,16 @@ function addMarkers(parsed){
 			});
   			newMarker.setMap(map);
    	}
+   	addMe(toAdd);
+}
+function addMe(toAdd){
    	me = new google.maps.LatLng(myLat, myLng);
-	
 	// Update map and go there...
 	map.panTo(me);
 	
 	var infoString = "Closest Location to Me: ";
 	infoString += toAdd[1];
-	infoString += ", ";
+	infoString += ", which is ";
 	infoString += toAdd[0];
 	infoString += " miles away";
 	// Create a marker
