@@ -4,7 +4,7 @@ Kiley Pratt
 
 To the best of my knowledge, I have implemented all aspects of this 
 project correctly. This program reads in user input, then displays
-it on the screen. It uses cookies to ensure the messages will still 
+it on the screen. It uses local storage to ensure the messages will still 
 be displayed when users return to the site.
 
 I completely this project alone, using only online resources- 

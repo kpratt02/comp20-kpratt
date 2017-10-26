@@ -8,20 +8,25 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
+    var storageNumber = 0;
     $(document).ready(function() {
-    //$('#log').prepend(document.cookie);
+        myStorage = window.localStorage;
+        while (storageNumber < myStorage.length){
+            $('#log').prepend(myStorage.getItem(storageNumber));
+            storageNumber++;
+        }
         $('input').keypress(function(e){
             var key = e.which;
             if (key == 13){
-                var newCookie = "hello=";
-                newCookie += $('input').val();
-                $('#log').prepend('</p>');
-                $('#log').prepend($('input').val());
-                $('#log').prepend(' - ');
+                var message = '<p>';
                 var current_data = new Date();
-                $('#log').prepend(current_data);
-                $('#log').prepend('<p>');
-                document.cookie = newCookie;
+                message += current_data;
+                message += (' - ');
+                message += $('input').val();
+                message += '</p>';
+                $('#log').prepend(message);
+                myStorage.setItem(storageNumber, message);
+                storageNumber++;
             }
         })
     })
