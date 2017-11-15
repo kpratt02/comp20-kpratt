@@ -34,7 +34,7 @@ function getMyLocation() {
 function executeRequest()
 {
   var http = new XMLHttpRequest();
-  http.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation");
+  http.open("POST", "https://aqueous-taiga-47832.herokuapp.com/sendLocation");
   http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   var to_send = "login=e3EaVo5o&lat=";
   to_send += myLat;
