@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head> 
+<meta charset="utf-8">
+<link href="style.css" rel="stylesheet"/>
+<title>Assignment 4</title>
+</head>
+
+<body>
+<h1>Assignment 4- Security</h1>
+<h2>Kiley Pratt, 12.1.2017</h2>
+<h2>Introduction</h2>
+<p> For this project, I was given a partner who had created a server and told to find three vulnerabilities in the other students code.
+I was provided with both the source code and the ability to send information to the app, and I was supposed to document and resolve
+security and privacy issues in this application.
+<h2>Methodology</h2>
+<p>I was able to pull my partners code from Heroku and examine it on my own desktop, as well as view the functioning app online. I was also 
+able to send my own data to app and see how is affected the online page. I used BurpSuite as well, as described below.</p>
+<h2>Abstract of Findings</h2>
+<p> I found several issues within the app, mostly dealing with the fact that the server developer neglected to sanitize user input. I 
+was able to re-direct the user to a different page upon loading the app, view user login and location information, and be returned all 
+the data for users of a different username than mine.
+<h2>Issues Found </h2>
+<h3>1) Cross-Site Scripting</h3>
+	<div class="bullets"><p>* Users were able to send data in through the 'login', 'lat', and 'lng' fields that affected the data contained within the app.This was a problem with /sendlocation</p>  
+	<p>* This is an issue of medium to high severity, since it affected the overall function of the app so drastically that it 
+		could not be opened properly until the offending data was removed; however, no user data was revealed to the hacker.</p>
+	<p>Description: (send in through the 'login' field)</p>
+		<div class="images"><img src="xsitescript.png" width="500" height="500" alt="xsitesciptlogin"/></div>
+	<p>Proof: (accessed after trying to load the homepage of the app)</p>
+		<div class="images"><img src="xsitescript2.png" width="500" height="500" alt="xsitesciptlogin"/></div>
+	<p>* This issue can be temporarily resolved by deleting the stored login data, and prevented from occuring in the future by 
+	parsing all user input to ensure special characters are not interpreted as data.</p>
+		<p>var login = request.body.login;</p>
+		<p>login = login.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');</p></div>
+
+<h3>2) Hidden Fields</h3>
+	<div class="bullets"><p>* Using BurpSuite, I was able to intercept the HTTP GET request and view all user login data coming from checkins.json</p>
+	<p>* This is an issue of high severity, since I (the hacker) was able to see all user data, including latitude and longitude</p>
+	<p>Description: I connected BurpSuite to my web brower, then loaded the page and was able to view all user data after
+		forwarding it through.</p>
+	<p>Proof: </p>
+		<div class="images"><img src="hidden.png" width="500" height="500" alt="hiddenproof"/></div>
+	<p>* This kind of attack can be prevented by not using hidden fields that will be visible to interceptors using this kind of 
+		software.</p></div>
+
+<h3>3) Injection Attack</h3>
+	<div class="bullets"><p>* From the checkins.json page, users can send in data that returns information they should not access; for example, the names of all users other than themselves.</p>
+	<p>* This is an issue of high severity, since it means users are able to view the logins and location of all other users of the 
+		app, a huge security issue</p>
+	<p>Description: After sending in login data with my own name, I accessed the checkins.json page using the query string login[$ne]=Kiley.
+		This displayed all other users that had checked in other than myself</p>
+	<p>Proof:
+		<div class="images"><img src="injection.png" width="500" height="500" alt="injectionproof"/></div>
+	* This attack can be prevented by sanitizing the input to parse out anything containing '$', which may be used to manipulate the
+		function. This can be completed using mongo-sanitize as suggested by the article referenced below:</p>
+		<p>login: sanitize(req.body.login);</p></div>
+
+
+<h2>Conclusion</h2>
+<p>Most of the issues with this app, as mentioned above, occured because the server didn't parse the users input to ensure it would 
+not directly affect the running of the page. There are several ways to screen this input, but it is an important lesson to make sure 
+that the app can only ever be affected by protection, internal designs, and that any place where outside sources can input data is 
+screened securely to ensure it is dealt with in the way the developed intended.</p>
+<h2>References</h2>
+		<div class="bullets"><p>https://www.sans.org/top25-software-errors/</p>
+		<p>BurpSuite Documentation</p>
+		<p>Mongo-Sanitize: https://zanon.io/posts/nosql-injection-in-mongodb</p></div>
+</body>
+
+</html>
